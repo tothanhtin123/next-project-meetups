@@ -35,11 +35,15 @@ export const getStaticPaths = async () => {
   return {
     //nếu fallback: false thì chỉ trả về những giá trị tương ứng với key (tên file hoặc thư mục tham số) có giá trị trong paths
     // ví dụ như domain/m1 => trong paths có meetUpId: 'm1' => trả về phần params chứa  meetUpId: 'm1 => ngược lại hiển thị một 404 page
-    //nếu fallback: true thì sẽ trả về giá trị mà người dùng nhập trên path
-    //ví dụ như domain/m1 => trả về luôn params: {meetUpId:'m1'} mà không cần quan tâm đến paths
+    //nếu fallback: true thì sẽ trả về giá trị mà người dùng nhập trên path - nếu không có trong paths thì trả về một trang rỗng
+    //ví dụ như domain/m1 => nếu có trong paths thì trả về {params:{meetUpId:'m1'}} như false
+    // nhưng nếu không có trong paths thì trả về một trang rỗng chứ không phải một trang 404 như false
     // lưu ý tham số trả về luôn phải ở dạng params: { keyname(tương ứng với tên file hoặc tên thư mục tham số):giá trị }
-    //dùng fallback: false sẽ bảo mật hơn
-    fallback: false,
+    //nếu fallback: 'blocking' thì nó cũng sẽ trả về như false và true nếu như tham số có trong paths
+    // nhưng nếu không có nó sẽ chờ đến khi có
+    //trong deploy, người ta thường dùng blocking hơn
+    //vì paths có thể là một mảng dữ liệu cần thời gian để lẩy ra
+    fallback: 'blocking',
     //dựa vào tham số trên đường dẫn - một đối tượng tham số tương ứng trong mảng paths sẽ được lấy ra và truyền cho hàm getStaticProps
     //paths trong trường hợp này sẽ nhận dữ liệu csdl
     paths: meetupsId.map((data) => {
